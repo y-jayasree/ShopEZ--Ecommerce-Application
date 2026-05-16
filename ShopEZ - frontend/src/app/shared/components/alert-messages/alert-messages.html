@@ -1,0 +1,11 @@
+<div class="alert-wrapper" *ngIf="message">
+  <div class="alert alert-{{ type }} alert-dismissible d-flex align-items-center gap-2 mb-3" role="alert">
+    <i class="bi flex-shrink-0"
+       [class.bi-check-circle-fill]="type === 'success'"
+       [class.bi-exclamation-triangle-fill]="type === 'danger'"
+       [class.bi-info-circle-fill]="type === 'info'"
+       [class.bi-exclamation-circle-fill]="type === 'warning'"></i>
+    <span class="flex-grow-1">{{ message }}</span>
+    <button type="button" class="btn-close" (click)="dismiss.emit()"></button>
+  </div>
+</div>

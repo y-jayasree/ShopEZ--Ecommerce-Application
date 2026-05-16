@@ -1,0 +1,114 @@
+<header class="shopez-header">
+
+  <!-- Main navbar -->
+  <nav class="navbar-main">
+    <div class="container-fluid px-3 d-flex align-items-center gap-3">
+
+      <!-- Logo -->
+      <a routerLink="/" class="brand-logo text-decoration-none flex-shrink-0">
+        <span class="logo-text">Shop<span class="logo-accent">EZ</span></span>
+      </a>
+
+      <!-- Search bar -->
+      <div class="search-container flex-grow-1 position-relative">
+        <div class="search-bar">
+          <input type="text" [(ngModel)]="searchQuery"
+                 (ngModelChange)="onSearchChange($event)"
+                 (keydown.enter)="performSearch()"
+                 (blur)="hideDropdown()"
+                 placeholder="Search products, brands and more..."
+                 class="search-input" autocomplete="off" />
+          <button class="search-btn" (click)="performSearch()">
+            <i class="bi bi-search"></i>
+          </button>
+        </div>
+        <!-- Suggestions -->
+        <div class="suggestions-dropdown" *ngIf="suggestions.length > 0 && showSuggestions">
+          <div class="suggestion-item" *ngFor="let s of suggestions"
+               (mousedown)="selectSuggestion(s)">
+            <i class="bi bi-search"></i>{{ s }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Nav actions -->
+      <div class="nav-actions d-flex align-items-center">
+
+        <!-- Account -->
+        <div class="dropdown" *ngIf="currentUser; else loginBtn">
+          <button class="nav-btn dropdown-toggle" data-bs-toggle="dropdown">
+            <span class="label-top">Hello, {{ currentUser.name.split(' ')[0] }}</span>
+            <span class="label-main"><i class="bi bi-person-fill me-1"></i>Account ▾</span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><div class="dropdown-header">Hello, {{ currentUser.name }}</div></li>
+            <li><hr class="dropdown-divider m-0"></li>
+            <li *ngIf="isAdmin">
+              <a class="dropdown-item" routerLink="/admin/dashboard">
+                <i class="bi bi-speedometer2"></i>Admin Dashboard
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" routerLink="/orders">
+                <i class="bi bi-box-seam"></i>My Orders
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" routerLink="/wishlist">
+                <i class="bi bi-heart"></i>Wishlist
+              </a>
+            </li>
+            <li><hr class="dropdown-divider m-0"></li>
+            <li>
+              <a class="dropdown-item text-danger" (click)="logout()" style="cursor:pointer">
+                <i class="bi bi-box-arrow-right"></i>Sign Out
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <ng-template #loginBtn>
+          <a routerLink="/login" class="nav-btn">
+            <span class="label-top">Hello, Sign in</span>
+            <span class="label-main"><i class="bi bi-person me-1"></i>Account ▾</span>
+          </a>
+        </ng-template>
+
+        <!-- Returns & Orders -->
+        <a routerLink="/orders" class="nav-btn d-none d-lg-flex">
+          <span class="label-top">Returns</span>
+          <span class="label-main">& Orders</span>
+        </a>
+
+        <!-- Wishlist -->
+        <a routerLink="/wishlist" class="nav-btn d-none d-md-flex">
+          <span class="label-top">Your</span>
+          <span class="label-main"><i class="bi bi-heart me-1"></i>Wishlist</span>
+        </a>
+
+        <!-- Cart -->
+        <a routerLink="/cart" class="nav-btn cart-btn">
+          <span class="cart-badge" *ngIf="cartCount > 0">{{ cartCount }}</span>
+          <i class="bi bi-cart3" style="font-size:1.5rem;"></i>
+          <span class="label-main ms-1">Cart</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Category bar -->
+  <div class="category-bar">
+    <div class="container-fluid px-3 d-flex gap-1 align-items-center">
+      <a routerLink="/" class="cat-link">
+        <i class="bi bi-grid-fill me-1"></i>All
+      </a>
+      <a [routerLink]="['/products']" [queryParams]="{category: 1}" class="cat-link">Electronics</a>
+      <a [routerLink]="['/products']" [queryParams]="{category: 2}" class="cat-link">Fashion</a>
+      <a [routerLink]="['/products']" [queryParams]="{category: 3}" class="cat-link">Home & Kitchen</a>
+      <a [routerLink]="['/products']" [queryParams]="{category: 4}" class="cat-link">Sports</a>
+      <a [routerLink]="['/products']" [queryParams]="{category: 5}" class="cat-link">Books</a>
+      <a [routerLink]="['/products']" [queryParams]="{category: 6}" class="cat-link">Beauty</a>
+      <a [routerLink]="['/products']" [queryParams]="{category: 8}" class="cat-link">Toys</a>
+    </div>
+  </div>
+</header>

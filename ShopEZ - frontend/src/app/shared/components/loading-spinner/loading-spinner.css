@@ -1,0 +1,26 @@
+.spinner-container{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  padding:48px 24px;
+  gap:12px;
+}
+.spinner-container.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(255,255,255,.82);
+  z-index: 9999;
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+}
+.spinner-border{
+  color:#ff9900!important;
+  width:2.5rem;height:2.5rem;
+  border-width:3px;
+}
+.spinner-message{
+  color:#565959;
+  font-size:14px;
+  font-weight:500;
+}

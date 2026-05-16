@@ -1,0 +1,10 @@
+<div class="star-rating">
+  <div class="stars">
+    <i *ngFor="let star of stars" class="bi"
+       [class.bi-star-fill]="star === 'full'"
+       [class.bi-star-half]="star === 'half'"
+       [class.bi-star]="star === 'empty'"
+       [style.font-size]="size + 'px'"></i>
+  </div>
+  <span *ngIf="showCount && count > 0" class="review-count">({{ count | number }})</span>
+</div>

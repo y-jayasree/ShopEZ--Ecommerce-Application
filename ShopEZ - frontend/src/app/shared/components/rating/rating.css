@@ -1,0 +1,23 @@
+.star-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  line-height: 1;
+}
+.stars {
+  display: inline-flex;
+  gap: 1px;
+}
+.stars i {
+  color: #ff9900;
+  font-size: 13px;
+}
+.review-count {
+  font-size: 12px;
+  color: #007185;
+  margin-left: 3px;
+}
+.review-count:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
