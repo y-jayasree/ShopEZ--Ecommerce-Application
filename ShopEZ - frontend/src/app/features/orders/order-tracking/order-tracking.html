@@ -1,0 +1,148 @@
+<div class="container py-4">
+      <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
+          <li class="breadcrumb-item"><a routerLink="/orders">Orders</a></li>
+          <li class="breadcrumb-item active">Order Details</li>
+        </ol>
+      </nav>
+ 
+      <app-loading-spinner *ngIf="isLoading" message="Loading order details..."></app-loading-spinner>
+ 
+      <div *ngIf="!isLoading && order">
+ 
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-4">
+          <div>
+            <h1 class="page-title">Order #{{ order.orderNumber }}</h1>
+            <div class="text-muted small">Placed on {{ order.createdAt | date:'longDate' }}</div>
+          </div>
+          <span class="status-badge status-{{ order.status.toLowerCase() }} fs-6">
+            {{ statusLabel(order.status) }}
+          </span>
+        </div>
+ 
+        <div class="row g-4">
+          <div class="col-lg-8">
+ 
+            <!-- Tracking  -->
+            <div class="tracking-card mb-4">
+              <h5 class="section-title">Tracking Status</h5>
+              <div class="timeline">
+                <div
+                  *ngFor="let step of timelineSteps; let last = last"
+                  class="timeline-step"
+                  [class.completed]="isStepCompleted(step.status)"
+                  [class.current]="order.status === step.status"
+                >
+                  <div class="step-icon-wrap">
+                    <div class="step-icon">
+                      <i class="bi" [class]="step.icon"></i>
+                    </div>
+                    <div *ngIf="!last" class="step-line"></div>
+                  </div>
+                  <div class="step-content">
+                    <div class="step-label">{{ step.label }}</div>
+                    <div class="step-desc text-muted small">{{ step.description }}</div>
+                    <div *ngIf="order.status === step.status" class="step-date small text-success">
+                      {{ order.updatedAt | date:'medium' }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+ 
+            <!-- Order Items -->
+            <div class="order-items-card">
+              <h5 class="section-title">Order Items</h5>
+              <div *ngFor="let item of order.items; let last = last"
+                   class="order-item d-flex gap-3 py-3"
+                   [class.border-bottom]="!last">
+                <img
+                  [src]="item.product?.imageUrl"
+                  [alt]="item.product?.name"
+                  class="item-img"
+                  (error)="onImgError($event)"
+                />
+                <div class="flex-grow-1">
+                  <a [routerLink]="['/products', item.product?.id]"
+                     class="item-name text-decoration-none fw-medium">
+                    {{ item.product?.name }}
+                  </a>
+                  <div class="text-muted small mt-1">Qty: {{ item.quantity }}</div>
+                  <div class="text-muted small">Unit Price: ₹{{ item.price | number }}</div>
+                </div>
+                <div class="text-end">
+                  <div class="fw-semibold">₹{{ (item.price * item.quantity) | number }}</div>
+                  <a [routerLink]="['/products', item.product?.id]"
+                     class="btn btn-sm btn-outline-warning mt-2">
+                    Buy again
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4">
+ 
+            <!-- Delivery Address -->
+            <div class="summary-box mb-3">
+              <h6 class="summary-title">
+                <i class="bi bi-geo-alt me-2 text-warning"></i>Delivery Address
+              </h6>
+              <div *ngIf="order.shippingAddress" class="small">
+                <div class="fw-semibold">{{ order.shippingAddress.fullName }}</div>
+                <div>{{ order.shippingAddress.addressLine1 }}</div>
+                <div *ngIf="order.shippingAddress.addressLine2">{{ order.shippingAddress.addressLine2 }}</div>
+                <div>{{ order.shippingAddress.city }}, {{ order.shippingAddress.state }}</div>
+                <div>{{ order.shippingAddress.pincode }}</div>
+                <div class="mt-1">Phone: {{ order.shippingAddress.phone }}</div>
+              </div>
+            </div>
+ 
+            <!-- Payment Info -->
+            <div class="summary-box mb-3">
+              <h6 class="summary-title">
+                <i class="bi bi-credit-card me-2 text-warning"></i>Payment
+              </h6>
+              <div class="small">
+                <div class="d-flex justify-content-between">
+                  <span>Method</span>
+                  <span class="fw-semibold">{{ paymentLabel(order.paymentMethod) }}</span>
+                </div>
+                <div class="d-flex justify-content-between mt-1">
+                  <span>Status</span>
+                  <span [class.text-success]="order.paymentStatus === 'PAID'"
+                        [class.text-warning]="order.paymentStatus === 'PENDING'"
+                        [class.text-danger]="order.paymentStatus === 'FAILED'"
+                        class="fw-semibold">
+                    {{ order.paymentStatus }}
+                  </span>
+                </div>
+              </div>
+            </div>
+ 
+            <!-- Price Breakdown -->
+            <div class="summary-box">
+              <h6 class="summary-title">
+                <i class="bi bi-receipt me-2 text-warning"></i>Order Summary
+              </h6>
+              <div class="small">
+                <div class="d-flex justify-content-between mb-1">
+                  <span>Items</span>
+                  <span>₹{{ order.subtotal | number }}</span>
+                </div>
+                <div class="d-flex justify-content-between mb-1">
+                  <span>Delivery</span>
+                  <span class="text-success">{{ order.shippingCost === 0 ? 'FREE' : '₹' + order.shippingCost }}</span>
+                </div>
+                <div class="d-flex justify-content-between fw-bold border-top pt-2 mt-2">
+                  <span>Order Total</span>
+                  <span class="text-danger">₹{{ order.total | number }}</span>
+                </div>
+              </div>
+            </div>
+ 
+          </div>
+        </div>
+      </div>
+    </div>

@@ -1,0 +1,74 @@
+<div class="admin-categories">
+  <div class="top-bar">
+    <a routerLink="/admin" (click)="goToDashboard()" class="back-btn">&#8592; Dashboard</a>
+  </div>
+
+  <div class="header">
+    <h1 class="page-title">Manage Categories</h1>
+    <button class="btn-primary" (click)="openCreate()">Add Category</button>
+  </div>
+
+  <!-- Success toast -->
+  <div *ngIf="successMessage" class="success-msg">{{ successMessage }}</div>
+
+  <div *ngIf="loading" class="loading">Loading...</div>
+  <div *ngIf="error"   class="error-msg">{{ error }}</div>
+
+  <!-- Form overlay -->
+  <div *ngIf="showForm" class="form-overlay">
+    <div class="form-card">
+      <h2>{{ editingId ? 'Edit Category' : 'New Category' }}</h2>
+      <form [formGroup]="form" (ngSubmit)="submit()">
+
+        <div class="field">
+          <label>Name</label>
+          <input formControlName="name" type="text" placeholder="Category name" />
+          <span class="err" *ngIf="form.get('name')?.touched && form.get('name')?.invalid">
+            Name required (min 2 chars)
+          </span>
+        </div>
+
+        <div class="field">
+          <label>Description</label>
+          <textarea formControlName="description" rows="2" placeholder="Optional description"></textarea>
+        </div>
+
+        <!-- Inline form error — replaces alert() -->
+        <div *ngIf="formError" class="form-error">{{ formError }}</div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" (click)="cancel()">Cancel</button>
+          <button type="submit" class="btn-primary" [disabled]="form.invalid || submitting">
+            {{ submitting ? 'Saving...' : 'Save' }}
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- Categories table -->
+  <table *ngIf="!loading && categories.length > 0" class="cat-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let c of categories">
+        <td>{{ c.id }}</td>
+        <td>{{ c.name }}</td>
+        <td>{{ c.description ?? '-' }}</td>
+        <td class="actions">
+          <button class="btn-edit"   (click)="openEdit(c)">Edit</button>
+          <button class="btn-delete" (click)="delete(c.id)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="!loading && !error && categories.length === 0" class="empty">No categories yet.</div>
+</div>

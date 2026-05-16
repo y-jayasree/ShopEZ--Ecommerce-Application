@@ -1,0 +1,26 @@
+<div class="wishlist-page">
+  <h1 class="page-title">My Wishlist</h1>
+
+  <div *ngIf="items.length === 0" class="empty-state">
+    <p>Your wishlist is empty.</p>
+    <a routerLink="/products" class="btn-primary">Browse Products</a>
+  </div>
+
+  <div *ngIf="items.length > 0" class="wishlist-grid">
+    <div *ngFor="let item of items" class="wishlist-card">
+      <img [src]="imageService.resolve(item.product.imageUrl)"
+           [alt]="item.product.name"
+           class="product-img"
+           (error)="imageService.onError($event)">
+      <div class="product-info">
+        <a [routerLink]="['/products', item.product.id]" class="product-name">{{ item.product.name }}</a>
+        <p class="product-price">₹{{ item.product.price | number:'1.2-2' }}</p>
+        <p class="product-category">{{ item.product.category.name }}</p>
+      </div>
+      <div class="card-actions">
+        <button class="btn-cart" (click)="addToCart(item)">Add to Cart</button>
+        <button class="btn-remove" (click)="remove(item.product.id)">Remove</button>
+      </div>
+    </div>
+  </div>
+</div>

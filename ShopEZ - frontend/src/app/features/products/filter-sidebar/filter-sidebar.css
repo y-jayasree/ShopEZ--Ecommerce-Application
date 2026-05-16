@@ -1,0 +1,69 @@
+.filter-sidebar {
+  background: #fff;
+  border: 1px solid #e3e3e3;
+  border-radius: 8px;
+  padding: 16px;
+  position: sticky;
+  top: 80px;
+}
+.filter-header {
+  margin-bottom: 14px;
+}
+.filter-header h5 {
+  font-size: 15px;
+  color: #0f1111;
+  margin: 0;
+  font-weight: 700;
+}
+.filter-header .btn-link {
+  font-size: 12px;
+  text-decoration: none;
+}
+.filter-header .btn-link:hover {
+  text-decoration: underline;
+}
+.filter-section {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 15px;
+  margin-bottom: 15px;
+}
+.filter-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+.filter-section-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f1111;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+.form-check {
+  margin-bottom: 6px;
+}
+.form-check-label {
+  font-size: 13px;
+  cursor: pointer;
+  color: #444;
+  padding-left: 4px;
+}
+.form-check-input:checked {
+  background-color: #ff9900;
+  border-color: #ff9900;
+}
+.price-inputs {
+  margin-bottom: 8px;
+}
+.price-presets {
+  gap: 4px !important;
+}
+.price-presets .btn {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 12px;
+}
+.form-select {
+  font-size: 13px;
+}

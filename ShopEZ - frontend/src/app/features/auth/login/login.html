@@ -1,0 +1,66 @@
+<div class="auth-page">
+  <div class="auth-container">
+
+    <!-- Logo -->
+    <a routerLink="/" class="auth-logo text-decoration-none">
+      <span class="logo-text">Shop<span class="logo-accent">EZ</span></span>
+    </a>
+
+    <div class="auth-card">
+      <h1 class="auth-title">Sign In</h1>
+
+      <app-alert-messages [message]="errorMessage" type="danger" (dismiss)="errorMessage = ''">
+      </app-alert-messages>
+
+      <div *ngIf="sessionExpired" class="alert alert-warning d-flex align-items-center gap-2">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        Your session has expired. Please sign in again.
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label class="form-label">Email address</label>
+          <input type="email" class="form-control" formControlName="email"
+                 placeholder="Enter your email"
+                 [class.is-invalid]="isFieldInvalid('email')" />
+          <div class="invalid-feedback" *ngIf="isFieldInvalid('email')">
+            <span *ngIf="loginForm.get('email')?.errors?.['required']">Email is required.</span>
+            <span *ngIf="loginForm.get('email')?.errors?.['email']">Please enter a valid email.</span>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Password</label>
+          <div class="input-group">
+            <input [type]="showPassword ? 'text' : 'password'" class="form-control"
+                   formControlName="password" placeholder="At least 6 characters"
+                   [class.is-invalid]="isFieldInvalid('password')" />
+            <button type="button" class="btn btn-outline-secondary"
+                    (click)="showPassword = !showPassword">
+              <i class="bi" [class.bi-eye]="!showPassword" [class.bi-eye-slash]="showPassword"></i>
+            </button>
+          </div>
+          <div class="invalid-feedback d-block" *ngIf="isFieldInvalid('password')">
+            Password is required.
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-warning w-100 fw-bold py-2" [disabled]="isLoading">
+          <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+          {{ isLoading ? 'Signing in...' : 'Sign In' }}
+        </button>
+
+        <div class="mt-3 text-center" style="font-size:12px;color:#555;">
+          By signing in, you agree to ShopEZ's
+          <a href="#">Conditions of Use</a> and <a href="#">Privacy Notice</a>.
+        </div>
+      </form>
+    </div>
+
+    <div class="auth-divider"><span>New to ShopEZ?</span></div>
+
+    <a routerLink="/register" class="btn btn-outline-secondary w-100">
+      Create your ShopEZ account
+    </a>
+  </div>
+</div>

@@ -1,0 +1,141 @@
+<div class="page-bg">
+  <div class="container-fluid px-3 px-lg-4 py-3">
+
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
+        <li class="breadcrumb-item active">Products</li>
+        <li *ngIf="keyword" class="breadcrumb-item active">"{{ keyword }}"</li>
+      </ol>
+    </nav>
+
+    <app-alert-messages [message]="alertMessage" [type]="alertType" (dismiss)="alertMessage = ''"></app-alert-messages>
+
+    <div class="row g-3 align-items-start">
+
+      <!--  Filter Sidebar  -->
+      <div class="col-lg-2 col-md-3 d-none d-md-block">
+        <app-filter-sidebar [initialFilter]="currentFilter" (filterChange)="onFilterChange($event)"></app-filter-sidebar>
+      </div>
+
+      <div class="col-lg-10 col-md-9">
+        <!-- Results bar -->
+        <div class="results-bar">
+          <span>
+            <span *ngIf="keyword">Results for <strong>"{{ keyword }}"</strong> — </span>
+            <strong>{{ totalProducts | number }}</strong> products found
+          </span>
+          <button class="btn btn-outline-secondary btn-sm d-md-none"
+                  data-bs-toggle="offcanvas" data-bs-target="#filterOffcanvas">
+            <i class="bi bi-funnel me-1"></i>Filters
+          </button>
+        </div>
+        <!-- Loading -->
+        <app-loading-spinner *ngIf="isLoading" message="Loading products..."></app-loading-spinner>
+
+        <!-- Empty state -->
+        <div *ngIf="!isLoading && products.length === 0" class="empty-state text-center">
+          <i class="bi bi-search" style="font-size:3rem;color:#ccc"></i>
+          <h5 class="mt-3">No products found</h5>
+          <p class="text-muted">Try adjusting your filters or check if the backend is running.</p>
+          <a routerLink="/products" class="btn btn-warning me-2">Browse All</a>
+          <button class="btn btn-outline-secondary" (click)="loadAllProducts()">
+            <i class="bi bi-arrow-clockwise me-1"></i>Retry
+          </button>
+        </div>
+
+        <!-- Product Grid -->
+        <div *ngIf="!isLoading && products.length > 0"
+             class="row g-3 row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5">
+          <div class="col" *ngFor="let product of products">
+            <div class="product-card">
+              <span *ngIf="getDiscount(product) > 0" class="discount-pill">
+                -{{ getDiscount(product) }}%
+              </span>
+
+              <!-- Wishlist -->
+              <button class="wishlist-btn"
+                      (click)="toggleWishlist(product, $event)"
+                      [title]="isWishlisted(product.id) ? 'Remove from wishlist' : 'Add to wishlist'">
+                <i class="bi"
+                   [class.bi-heart-fill]="isWishlisted(product.id)"
+                   [class.bi-heart]="!isWishlisted(product.id)"
+                   [style.color]="isWishlisted(product.id) ? '#cc0c39' : '#aaa'"></i>
+              </button>
+
+              <!-- Image -->
+              <a [routerLink]="['/products', product.id]" class="product-img-link">
+                <img [src]="getImageUrl(product)"
+                     [alt]="product.name" class="product-img" loading="lazy"
+                     (error)="onImgError($event)" />
+              </a>
+
+              <!-- Info -->
+              <div class="product-info">
+                <a [routerLink]="['/products', product.id]" class="product-name">
+                  {{ product.name }}
+                </a>
+
+                <app-rating [rating]="product.rating" [count]="product.reviewCount"></app-rating>
+
+                <div class="price-block">
+                  <span class="price">₹{{ product.price | number }}</span>
+                  <span *ngIf="product.originalPrice" class="original-price">
+                    ₹{{ product.originalPrice | number }}
+                  </span>
+                </div>
+
+                <div class="stock-status">
+                  <span *ngIf="product.stock > 10" class="text-success small">
+                    <i class="bi bi-check-circle me-1"></i>In Stock
+                  </span>
+                  <span *ngIf="product.stock > 0 && product.stock <= 10" class="text-warning small fw-semibold">
+                    Only {{ product.stock }} left!
+                  </span>
+                  <span *ngIf="product.stock === 0" class="text-danger small">Out of Stock</span>
+                </div>
+
+                <button class="btn btn-warning btn-sm w-100 mt-2 add-cart-btn"
+                        [disabled]="product.stock === 0" (click)="addToCart(product)">
+                  <i class="bi bi-cart-plus me-1"></i>
+                  {{ isInCart(product.id) ? '✓ Added' : 'Add to Cart' }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pagination -->
+        <nav *ngIf="totalPages > 1" class="mt-4 d-flex justify-content-center">
+          <ul class="pagination">
+            <li class="page-item" [class.disabled]="currentPage === 0">
+              <button class="page-link" (click)="goToPage(currentPage - 1)">
+                <i class="bi bi-chevron-left"></i>
+              </button>
+            </li>
+            <li class="page-item" *ngFor="let page of visiblePages" [class.active]="page === currentPage">
+              <button class="page-link" (click)="goToPage(page)">{{ page + 1 }}</button>
+            </li>
+            <li class="page-item" [class.disabled]="currentPage === totalPages - 1">
+              <button class="page-link" (click)="goToPage(currentPage + 1)">
+                <i class="bi bi-chevron-right"></i>
+              </button>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Mobile filter offcanvas -->
+<div class="offcanvas offcanvas-start" id="filterOffcanvas" tabindex="-1">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title fw-bold">Filters</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+  </div>
+  <div class="offcanvas-body">
+    <app-filter-sidebar [initialFilter]="currentFilter" (filterChange)="onFilterChange($event)"></app-filter-sidebar>
+  </div>
+</div>

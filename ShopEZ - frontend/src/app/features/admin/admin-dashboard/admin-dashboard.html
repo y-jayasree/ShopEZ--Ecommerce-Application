@@ -1,0 +1,30 @@
+<div class="dashboard">
+  <h1 class="page-title">Admin Dashboard</h1>
+
+  <div *ngIf="loading" class="loading">Loading...</div>
+
+  <div *ngIf="!loading" class="stats-grid">
+    <div class="stat-card">
+      <span class="stat-label">Total Users</span>
+      <span class="stat-value">{{ stats.totalUsers }}</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">Total Products</span>
+      <span class="stat-value">{{ stats.totalProducts }}</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">Total Orders</span>
+      <span class="stat-value">{{ stats.totalOrders }}</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">Total Revenue</span>
+      <span class="stat-value">&#8377;{{ stats.totalRevenue | number:'1.2-2' }}</span>
+    </div>
+  </div>
+
+  <div class="nav-links">
+    <a routerLink="/admin/products" class="nav-btn">Manage Products</a>
+    <a routerLink="/admin/categories" class="nav-btn">Manage Categories</a>
+    <a routerLink="/admin/orders" class="nav-btn">Manage Orders</a>
+  </div>
+</div>

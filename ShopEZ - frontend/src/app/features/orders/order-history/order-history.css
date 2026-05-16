@@ -1,0 +1,139 @@
+.page-title {
+  font-size: 1.5rem;
+  font-weight: 300;
+  margin-bottom: 20px;
+  color: #0f1111;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 12px;
+}
+
+.order-card {
+  border: 1px solid #d5d9d9;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 16px;
+  background: #fff;
+  transition: box-shadow 0.2s;
+}
+.order-card:hover {
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+}
+
+.order-header {
+  background: #f0f2f2;
+  padding: 14px 20px;
+  border-bottom: 1px solid #d5d9d9;
+}
+.order-meta {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+.meta-label {
+  font-size: 11px;
+  color: #565959;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
+}
+.meta-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: #0f1111;
+}
+.order-id-col {
+  text-align: right;
+}
+
+.order-body {
+  padding: 16px 20px;
+}
+
+/* Items strip  */
+.order-items-row {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+.order-items-row::-webkit-scrollbar {
+  height: 3px;
+}
+.order-item-thumb {
+  flex-shrink: 0;
+  text-align: center;
+  width: 82px;
+}
+.item-img {
+  width: 82px;
+  height: 82px;
+  object-fit: contain;
+  background: #f8f8f8;
+  border: 1px solid #e3e3e3;
+  border-radius: 6px;
+  padding: 5px;
+  display: block;
+}
+.item-thumb-name {
+  font-size: 11px;
+  color: #555;
+  margin-top: 4px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-height: 1.3;
+  line-clamp: 2;
+}
+.more-items {
+  width: 82px;
+  height: 82px;
+  background: #f0f2f2;
+  border: 1px solid #e3e3e3;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: #555;
+  font-weight: 600;
+}
+
+/* Status badge */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.status-pending {
+  background: #fff3cd;
+  color: #856404;
+}
+.status-confirmed {
+  background: #cfe2ff;
+  color: #084298;
+}
+.status-shipped {
+  background: #d1ecf1;
+  color: #0c5460;
+}
+.status-delivered {
+  background: #d4edda;
+  color: #155724;
+}
+.status-cancelled {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.empty-state {
+  background: #fff;
+  border-radius: 8px;
+  padding: 70px 20px;
+  text-align: center;
+}

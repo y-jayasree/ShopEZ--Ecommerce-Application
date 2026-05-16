@@ -1,0 +1,114 @@
+<div class="admin-products">
+  <div class="top-bar">
+    <a routerLink="/admin" (click)="goToDashboard()" class="back-btn">&#8592; Dashboard</a>
+  </div>
+
+  <div class="header">
+    <h1 class="page-title">Manage Products</h1>
+    <button class="btn-primary" (click)="openCreate()">Add Product</button>
+  </div>
+
+  <!-- Success toast -->
+  <div *ngIf="successMessage" class="success-msg">{{ successMessage }}</div>
+
+  <!-- Inline errors -->
+  <div *ngIf="deleteError" class="error-msg">{{ deleteError }}</div>
+  <div *ngIf="error"       class="error-msg">{{ error }}</div>
+
+  <div *ngIf="loading" class="loading">Loading...</div>
+
+  <!-- Form overlay -->
+  <div *ngIf="showForm" class="form-overlay">
+    <div class="form-card">
+      <h2>{{ editingId ? 'Edit Product' : 'New Product' }}</h2>
+      <form [formGroup]="form" (ngSubmit)="submit()">
+
+        <div class="field">
+          <label>Name</label>
+          <input formControlName="name" type="text" placeholder="Product name">
+          <span class="err" *ngIf="form.get('name')?.touched && form.get('name')?.invalid">
+            Name required (min 2 chars)
+          </span>
+        </div>
+
+        <div class="field">
+          <label>Description</label>
+          <textarea formControlName="description" rows="3" placeholder="Product description"></textarea>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label>Price (&#8377;)</label>
+            <input formControlName="price" type="number" step="0.01" min="0.01">
+            <span class="err" *ngIf="form.get('price')?.touched && form.get('price')?.invalid">
+              Valid price required
+            </span>
+          </div>
+          <div class="field">
+            <label>Stock</label>
+            <input formControlName="stock" type="number" min="0">
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Category</label>
+          <select formControlName="categoryId">
+            <option [ngValue]="null">Select category</option>
+            <option *ngFor="let c of categories" [ngValue]="c.id">{{ c.name }}</option>
+          </select>
+          <span class="err" *ngIf="form.get('categoryId')?.touched && form.get('categoryId')?.invalid">
+            Category required
+          </span>
+        </div>
+
+        <div class="field">
+          <label>Image</label>
+          <input type="file" accept="image/*" (change)="onFileChange($event)">
+        </div>
+
+        <!-- Inline form error — replaces alert() -->
+        <div *ngIf="formError" class="form-error">{{ formError }}</div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" (click)="cancelForm()">Cancel</button>
+          <button type="submit" class="btn-primary" [disabled]="form.invalid || submitting">
+            {{ submitting ? 'Saving...' : 'Save' }}
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- Products table -->
+  <table *ngIf="!loading && products.length > 0" class="products-table">
+    <thead>
+      <tr>
+        <th>Image</th>
+        <th>Name</th>
+        <th>Category</th>
+        <th>Price</th>
+        <th>Stock</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let p of products">
+        <td>
+          <img [src]="imageService.resolve(p.imageUrl)" [alt]="p.name"
+               class="thumb" (error)="imageService.onError($event)">
+        </td>
+        <td>{{ p.name }}</td>
+        <td>{{ p.category?.name }}</td>
+        <td>&#8377;{{ p.price | number:'1.2-2' }}</td>
+        <td [class]="p.stock < 5 ? 'low-stock' : ''">{{ p.stock }}</td>
+        <td class="actions">
+          <button class="btn-edit"   (click)="openEdit(p)">Edit</button>
+          <button class="btn-delete" (click)="delete(p.id)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="!loading && products.length === 0 && !error" class="empty">No products yet.</div>
+</div>

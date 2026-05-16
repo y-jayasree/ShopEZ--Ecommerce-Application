@@ -1,0 +1,47 @@
+<div class="admin-orders">
+  <div class="top-bar">
+    <a routerLink="/admin" (click)="goToDashboard()" class="back-btn">&#8592; Dashboard</a>
+  </div>
+
+  <h1 class="page-title">Manage Orders</h1>
+
+  <!-- Success toast -->
+  <div *ngIf="successMessage" class="success-msg">{{ successMessage }}</div>
+
+  <!-- Inline errors — replaces alert() -->
+  <div *ngIf="updateError" class="error-msg">{{ updateError }}</div>
+  <div *ngIf="error"       class="error-msg">{{ error }}</div>
+
+  <div *ngIf="loading" class="loading">Loading orders...</div>
+  <div *ngIf="!loading && orders.length === 0 && !error" class="empty">No orders found.</div>
+
+  <table *ngIf="!loading && orders.length > 0" class="orders-table">
+    <thead>
+      <tr>
+        <th>Order #</th>
+        <th>User ID</th>
+        <th>Date</th>
+        <th>Total</th>
+        <th>Status</th>
+        <th>Update Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let order of orders">
+        <td>{{ order.orderNumber }}</td>
+        <td>{{ order.userId }}</td>
+        <td>{{ order.orderDate | date:'mediumDate' }}</td>
+        <td>&#8377;{{ order.totalAmount | number:'1.2-2' }}</td>
+        <td>
+          <span [class]="'badge ' + getStatusClass(order.status)">{{ order.status }}</span>
+        </td>
+        <td>
+          <select (change)="updateStatus(order.orderId, $any($event.target).value)">
+            <option value="">-- Change --</option>
+            <option *ngFor="let s of statuses" [value]="s">{{ s }}</option>
+          </select>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,74 @@
+<div class="filter-sidebar">
+  <div class="filter-header d-flex justify-content-between align-items-center mb-3">
+    <h5 class="mb-0 fw-bold">Filters</h5>
+    <button class="btn btn-sm btn-link text-danger p-0" (click)="clearFilters()">
+      Clear All
+    </button>
+  </div>
+
+  <!-- Category filter section  -->
+  <div class="filter-section">
+    <h6 class="filter-section-title">Category</h6>
+    <select class="form-select form-select-sm"
+            [(ngModel)]="selectedCategoryId"
+            (change)="applyFilters()">
+      <option [ngValue]="undefined">All Categories</option>
+      <option *ngFor="let c of categories" [ngValue]="c.id">{{ c.name }}</option>
+    </select>
+  </div>
+
+  <!-- Price Range -->
+  <div class="filter-section">
+    <h6 class="filter-section-title">Price Range</h6>
+    <div class="price-inputs d-flex gap-2 align-items-center">
+      <div class="input-group input-group-sm">
+        <span class="input-group-text">₹</span>
+        <input type="number" class="form-control" placeholder="Min"
+               [(ngModel)]="minPrice" (change)="applyFilters()" />
+      </div>
+      <span>—</span>
+      <div class="input-group input-group-sm">
+        <span class="input-group-text">₹</span>
+        <input type="number" class="form-control" placeholder="Max"
+               [(ngModel)]="maxPrice" (change)="applyFilters()" />
+      </div>
+    </div>
+    <div class="price-presets mt-2 d-flex flex-wrap gap-1">
+      <button *ngFor="let preset of pricePresets" class="btn btn-sm"
+        [class.btn-warning]="minPrice === preset.min && maxPrice === preset.max"
+        [class.btn-outline-secondary]="!(minPrice === preset.min && maxPrice === preset.max)"
+        (click)="setPricePreset(preset)">
+        {{ preset.label }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Rating -->
+  <div class="filter-section">
+    <h6 class="filter-section-title">Minimum Rating</h6>
+    <div *ngFor="let r of [4, 3, 2, 1]" class="form-check">
+      <input class="form-check-input" type="checkbox" [id]="'rating-' + r"
+             [checked]="minRating === r"
+             (change)="minRating = (minRating === r ? undefined : r); applyFilters()" />
+      <label class="form-check-label d-flex align-items-center gap-1" [for]="'rating-' + r">
+        <span class="text-warning">
+          <i *ngFor="let s of getStars(r)" class="bi bi-star-fill" style="font-size:12px"></i>
+        </span>
+        <span class="text-muted small">& above</span>
+      </label>
+    </div>
+  </div>
+
+  <!-- Sort By -->
+  <div class="filter-section">
+    <h6 class="filter-section-title">Sort By</h6>
+    <!-- default sortBy is 'popularity' -->
+    <select class="form-select form-select-sm" [(ngModel)]="sortBy" (change)="applyFilters()">
+      <option value="popularity">Popularity</option>
+      <option value="price_asc">Price: Low to High</option>
+      <option value="price_desc">Price: High to Low</option>
+      <option value="newest">Newest First</option>
+      <option value="rating">Highest Rated</option>
+    </select>
+  </div>
+</div>

@@ -1,0 +1,227 @@
+<!--  Hero Banner  -->
+<section class="hero-banner">
+  <div class="hero-content">
+    <div class="hero-text">
+      <p class="hero-sub">Welcome to</p>
+      <h1 class="hero-title">Shop<span class="hero-accent">EZ</span></h1>
+      <p class="hero-desc">Millions of products. Unbeatable prices. Fast delivery.</p>
+      <div class="hero-actions">
+        <a routerLink="/products" class="hero-btn">
+          <i class="bi bi-bag-heart me-2"></i>Shop Now
+        </a>
+        <a routerLink="/products" class="hero-btn-outline">
+          <i class="bi bi-grid me-2"></i>Browse All
+        </a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!--  Feature Strip  -->
+<section class="feature-strip">
+  <div class="container-fluid px-4">
+    <div class="row g-0">
+      <div class="col-6 col-md-3">
+        <div class="feature-item">
+          <i class="bi bi-truck feature-icon"></i>
+          <div><div class="feature-title">Free Delivery</div><div class="feature-sub">On orders above ₹499</div></div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="feature-item">
+          <i class="bi bi-shield-check feature-icon"></i>
+          <div><div class="feature-title">Secure Payment</div><div class="feature-sub">100% safe & protected</div></div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="feature-item">
+          <i class="bi bi-arrow-return-left feature-icon"></i>
+          <div><div class="feature-title">Easy Returns</div><div class="feature-sub">30-day return policy</div></div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="feature-item">
+          <i class="bi bi-headset feature-icon"></i>
+          <div><div class="feature-title">24/7 Support</div><div class="feature-sub">Dedicated helpdesk</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--  Shop by Category  -->
+<section class="section-block">
+  <div class="container-fluid px-4">
+    <div class="section-header">
+      <h2 class="section-title">Shop by Category</h2>
+      <a routerLink="/products" class="section-link">See all <i class="bi bi-arrow-right"></i></a>
+    </div>
+
+    <!-- Loading -->
+    <app-loading-spinner *ngIf="isLoadingCategories" message="Loading categories..."></app-loading-spinner>
+
+    <!-- Categories from API -->
+    <div *ngIf="!isLoadingCategories && categories.length > 0"
+         class="row g-3 row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-8">
+      <div class="col" *ngFor="let cat of categories">
+        <a [routerLink]="['/products']" [queryParams]="{category: cat.id}" class="cat-card text-decoration-none">
+          <div class="cat-icon-wrap" [style.background]="getCategoryColor(cat.name) + '22'">
+            <i class="bi" [class]="getCategoryIcon(cat.name)" [style.color]="getCategoryColor(cat.name)"></i>
+          </div>
+          <span class="cat-name">{{ cat.name }}</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Fallback if API returns empty categories -->
+    <div *ngIf="!isLoadingCategories && categories.length === 0"
+         class="row g-3 row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-8">
+      <div class="col">
+        <a [routerLink]="['/products']" [queryParams]="{category:1}" class="cat-card text-decoration-none">
+          <div class="cat-icon-wrap" style="background:#0dcaf022"><i class="bi bi-laptop" style="color:#0dcaf0"></i></div>
+          <span class="cat-name">Electronics</span>
+        </a>
+      </div>
+      <div class="col">
+        <a [routerLink]="['/products']" [queryParams]="{category:2}" class="cat-card text-decoration-none">
+          <div class="cat-icon-wrap" style="background:#fd7e1422"><i class="bi bi-bag" style="color:#fd7e14"></i></div>
+          <span class="cat-name">Fashion</span>
+        </a>
+      </div>
+      <div class="col">
+        <a [routerLink]="['/products']" [queryParams]="{category:3}" class="cat-card text-decoration-none">
+          <div class="cat-icon-wrap" style="background:#20c99722"><i class="bi bi-house" style="color:#20c997"></i></div>
+          <span class="cat-name">Home & Kitchen</span>
+        </a>
+      </div>
+      <div class="col">
+        <a [routerLink]="['/products']" [queryParams]="{category:4}" class="cat-card text-decoration-none">
+          <div class="cat-icon-wrap" style="background:#0d6efd22"><i class="bi bi-trophy" style="color:#0d6efd"></i></div>
+          <span class="cat-name">Sports</span>
+        </a>
+      </div>
+      <div class="col">
+        <a [routerLink]="['/products']" [queryParams]="{category:5}" class="cat-card text-decoration-none">
+          <div class="cat-icon-wrap" style="background:#6f42c122"><i class="bi bi-book" style="color:#6f42c1"></i></div>
+          <span class="cat-name">Books</span>
+        </a>
+      </div>
+      <div class="col">
+        <a [routerLink]="['/products']" [queryParams]="{category:6}" class="cat-card text-decoration-none">
+          <div class="cat-icon-wrap" style="background:#e83e8c22"><i class="bi bi-stars" style="color:#e83e8c"></i></div>
+          <span class="cat-name">Beauty</span>
+        </a>
+      </div>
+      <div class="col">
+        <a [routerLink]="['/products']" [queryParams]="{category:8}" class="cat-card text-decoration-none">
+          <div class="cat-icon-wrap" style="background:#ffc10722"><i class="bi bi-controller" style="color:#ffc107"></i></div>
+          <span class="cat-name">Toys</span>
+        </a>
+      </div>
+      <div class="col">
+        <a [routerLink]="['/products']" [queryParams]="{category:8}" class="cat-card text-decoration-none">
+          <div class="cat-icon-wrap" style="background:#19875422"><i class="bi bi-basket" style="color:#198754"></i></div>
+          <span class="cat-name">Grocery</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--  Promo Banners  -->
+<section class="promo-section">
+  <div class="container-fluid px-4">
+    <div class="row g-3">
+      <div class="col-md-4">
+        <div class="promo-card promo-electronics">
+          <div class="promo-body">
+            <span class="promo-tag">Best Sellers</span>
+            <h3 class="promo-title">Top<br>Electronics</h3>
+            <a [routerLink]="['/products']" [queryParams]="{category:1}" class="promo-link">
+              Shop now <i class="bi bi-arrow-right"></i>
+            </a>
+          </div>
+          <i class="bi bi-laptop promo-icon"></i>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="promo-card promo-fashion">
+          <div class="promo-body">
+            <span class="promo-tag">New Arrivals</span>
+            <h3 class="promo-title">Fashion &<br> Style</h3>
+            <a [routerLink]="['/products']" [queryParams]="{category:2}" class="promo-link">
+              Shop now <i class="bi bi-arrow-right"></i>
+            </a>
+          </div>
+          <i class="bi bi-bag promo-icon"></i>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="promo-card promo-home">
+          <div class="promo-body">
+            <span class="promo-tag">Top Deals</span>
+            <h3 class="promo-title">Home & <br>Kitchen</h3>
+            <a [routerLink]="['/products']" [queryParams]="{category:3}" class="promo-link">
+              Shop now <i class="bi bi-arrow-right"></i>
+            </a>
+          </div>
+          <i class="bi bi-house promo-icon"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--  Featured Products  -->
+<section class="section-block pb-4">
+  <div class="container-fluid px-4">
+    <div class="section-header">
+      <h2 class="section-title">Featured Products</h2>
+      <a routerLink="/products" class="section-link">View all <i class="bi bi-arrow-right"></i></a>
+    </div>
+
+    <app-loading-spinner *ngIf="isLoadingFeatured" message="Loading products..."></app-loading-spinner>
+
+    <div *ngIf="!isLoadingFeatured && featuredProducts.length === 0" class="no-products-banner">
+      <div class="no-products-inner">
+        <i class="bi bi-box-seam-fill no-products-icon"></i>
+        <h4 class="mt-3">Connect your backend to see products</h4>
+        <p class="text-muted">Backend URL: <code>{{ apiNote }}</code></p>
+        <p class="text-muted small">Make sure your backend server is running and the URL matches.</p>
+        <a routerLink="/products" class="btn btn-warning mt-2 px-4 me-2">
+          <i class="bi bi-arrow-clockwise me-2"></i>Retry
+        </a>
+        <a routerLink="/login" class="btn btn-outline-secondary mt-2 px-4">
+          <i class="bi bi-person me-2"></i>Login to Admin
+        </a>
+      </div>
+    </div>
+
+    <!-- Products grid -->
+    <div *ngIf="!isLoadingFeatured && featuredProducts.length > 0"
+         class="row g-3 row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5">
+      <div class="col" *ngFor="let product of featuredProducts">
+        <div class="product-card">
+          <span *ngIf="getDiscount(product) > 0" class="discount-pill">
+            -{{ getDiscount(product) }}%
+          </span>
+          <a [routerLink]="['/products', product.id]" class="product-img-link">
+            <img [src]="product.imageUrl"
+     [alt]="product.name"
+     class="product-img"
+     (error)="onImgError($event)" />
+          </a>
+          <div class="product-info">
+            <a [routerLink]="['/products', product.id]" class="product-name">{{ product.name }}</a>
+            <app-rating [rating]="product.rating" [count]="product.reviewCount" [size]="12"></app-rating>
+            <div class="price-row">
+              <span class="price">₹{{ product.price | number }}</span>
+              <span *ngIf="product.originalPrice" class="orig-price">₹{{ product.originalPrice | number }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,106 @@
+<div class="page-bg">
+  <div class="container-fluid px-3 px-lg-4">
+
+    <h1 class="cart-title">Shopping Cart</h1>
+
+    <app-alert-messages [message]="alertMessage" [type]="alertType" (dismiss)="alertMessage = ''"></app-alert-messages>
+
+    <!-- Empty cart -->
+    <div *ngIf="cart.items.length === 0" class="empty-cart">
+      <i class="bi bi-cart-x" style="font-size:4rem;color:#ccc"></i>
+      <h4 class="mt-3">Your Shopping Cart is empty</h4>
+      <p class="text-muted mt-1">You have no items in your cart. To buy one or more items, click "Add to Cart".</p>
+      <a routerLink="/products" class="btn btn-warning mt-3 px-4">
+        <i class="bi bi-arrow-left me-2"></i>Continue Shopping
+      </a>
+    </div>
+
+    <!-- Cart with items -->
+    <div *ngIf="cart.items.length > 0" class="row g-3 align-items-start">
+
+      <!-- LEFT: Cart items -->
+      <div class="col-lg-9">
+        <div class="cart-card">
+          <div class="cart-header d-flex justify-content-between align-items-center">
+            <span class="fw-semibold text-dark">Shopping Cart</span>
+            <span>Price</span>
+          </div>
+
+          <div *ngFor="let item of cart.items; let last = last"
+               class="cart-item" [class.border-bottom]="!last">
+
+            <!-- Image -->
+            <img [src]="item.product.imageUrl" [alt]="item.product.name"
+                 class="product-thumb"
+                 [routerLink]="['/products', item.product.id]"
+                 (error)="onImgError($event)" />
+
+            <!-- Details -->
+            <div class="item-details">
+              <a [routerLink]="['/products', item.product.id]" class="item-name">
+                {{ item.product.name }}
+              </a>
+              <div class="item-stock">
+                <i class="bi bi-check-circle-fill me-1"></i>In Stock
+              </div>
+
+              <div class="item-actions">
+                <div class="qty-control">
+                  <button class="qty-btn" (click)="updateQty(item.product.id, item.quantity - 1)"
+                          [disabled]="item.quantity <= 1">
+                    <i class="bi bi-dash"></i>
+                  </button>
+                  <span class="qty-display">{{ item.quantity }}</span>
+                  <button class="qty-btn" (click)="updateQty(item.product.id, item.quantity + 1)"
+                          [disabled]="item.quantity >= item.product.stock">
+                    <i class="bi bi-plus"></i>
+                  </button>
+                </div>
+                <span class="action-divider">|</span>
+                <button class="action-link" (click)="removeItem(item.product.id)">Delete</button>
+                <span class="action-divider">|</span>
+                <button class="action-link" (click)="saveForLater(item.product.id)">Save for later</button>
+              </div>
+            </div>
+
+            <!-- Price -->
+            <div class="item-price">₹{{ (item.product.price * item.quantity) | number }}</div>
+          </div>
+
+          <div class="cart-subtotal">
+            Subtotal ({{ cart.totalItems }} item{{ cart.totalItems !== 1 ? 's' : '' }}):
+            <strong class="ms-1 fs-5">₹{{ cart.totalPrice | number }}</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Summary -->
+      <div class="col-lg-3">
+        <div class="summary-card">
+          <div class="summary-free-del">
+            <i class="bi bi-check-circle-fill"></i>
+            Your order qualifies for <strong>FREE Delivery</strong>.
+          </div>
+          <div class="summary-total">
+            Subtotal ({{ cart.totalItems }} item{{ cart.totalItems !== 1 ? 's' : '' }}):
+            <strong class="d-block fs-5 mt-1">₹{{ cart.totalPrice | number }}</strong>
+          </div>
+          <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" id="giftCheck">
+            <label class="form-check-label small" for="giftCheck">This order contains a gift</label>
+          </div>
+          <button class="btn btn-warning w-100 fw-bold py-2 fs-6" (click)="proceedToCheckout()">
+            Proceed to Buy ({{ cart.totalItems }} item{{ cart.totalItems !== 1 ? 's' : '' }})
+          </button>
+        </div>
+
+        <div class="emi-card">
+          <h6 class="small fw-bold mb-1"><i class="bi bi-credit-card me-2 text-warning"></i>EMI available</h6>
+          <p class="small text-muted mb-0">
+            EMI from ₹{{ (cart.totalPrice / 12) | number:'1.0-0' }}/month. <a href="#">Details</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
