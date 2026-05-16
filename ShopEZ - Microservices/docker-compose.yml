@@ -1,0 +1,165 @@
+services:
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: shopez-sqlserver
+    restart: unless-stopped
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "ShopEZ@Str0ngPass!"
+      MSSQL_PID: "Developer"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    networks:
+      - shopez-network
+    healthcheck:
+      test: >
+        /opt/mssql-tools18/bin/sqlcmd
+        -S localhost -U sa -P "ShopEZ@Str0ngPass!"
+        -Q "SELECT 1" -No
+      interval: 10s
+      timeout: 5s
+      retries: 15
+      start_period: 30s
+
+  auth-service:
+    build:
+      context: .
+      dockerfile: ShopEZ_AuthService/Dockerfile
+    container_name: shopez-auth
+    restart: unless-stopped
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    environment:
+      ConnectionStrings__DefaultConnection: "Server=sqlserver;Database=ShopEZ_AuthDb;User Id=sa;Password=ShopEZ@Str0ngPass!;TrustServerCertificate=True"
+      JwtSettings__SecretKey: "ShopEZSuperSecretKey2025ForJWTTokenGeneration!!"
+      JwtSettings__Issuer: "ShopEZ"
+      JwtSettings__Audience: "ShopEZ"
+      JwtSettings__ExpiryInMinutes: "10080"
+      AdminSeed__Name: "Super Admin"
+      AdminSeed__Email: "admin@shopez.com"
+      AdminSeed__Password: "Admin@123"
+      AllowedOrigins: "http://localhost:4200"
+      ASPNETCORE_ENVIRONMENT: "Development"
+    ports:
+      - "7001:80"
+    networks:
+      - shopez-network
+
+  product-service:
+    build:
+      context: .
+      dockerfile: ShopEZ_ProductService/Dockerfile
+    container_name: shopez-product
+    restart: unless-stopped
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    environment:
+      ConnectionStrings__DefaultConnection: "Server=sqlserver;Database=ShopEZ_ProductDb;User Id=sa;Password=ShopEZ@Str0ngPass!;TrustServerCertificate=True"
+      JwtSettings__SecretKey: "ShopEZSuperSecretKey2025ForJWTTokenGeneration!!"
+      JwtSettings__Issuer: "ShopEZ"
+      JwtSettings__Audience: "ShopEZ"
+      JwtSettings__ExpiryInMinutes: "10080"
+      AllowedOrigins: "http://localhost:4200"
+      ASPNETCORE_ENVIRONMENT: "Development"
+    ports:
+      - "7002:80"
+    volumes:
+      - product_images:/app/wwwroot/images
+    networks:
+      - shopez-network
+
+  cart-service:
+    build:
+      context: .
+      dockerfile: ShopEZ_cartservice/Dockerfile
+    container_name: shopez-cart
+    restart: unless-stopped
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    environment:
+      ConnectionStrings__DefaultConnection: "Server=sqlserver;Database=ShopEZ_CartDb;User Id=sa;Password=ShopEZ@Str0ngPass!;TrustServerCertificate=True"
+      JwtSettings__SecretKey: "ShopEZSuperSecretKey2025ForJWTTokenGeneration!!"
+      JwtSettings__Issuer: "ShopEZ"
+      JwtSettings__Audience: "ShopEZ"
+      JwtSettings__ExpiryInMinutes: "10080"
+      AllowedOrigins: "http://localhost:4200"
+      ASPNETCORE_ENVIRONMENT: "Development"
+    ports:
+      - "7003:80"
+    networks:
+      - shopez-network
+
+  order-service:
+    build:
+      context: .
+      dockerfile: ShopEZ_OrderService/Dockerfile
+    container_name: shopez-order
+    restart: unless-stopped
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    environment:
+      ConnectionStrings__DefaultConnection: "Server=sqlserver;Database=ShopEZ_OrderDb;User Id=sa;Password=ShopEZ@Str0ngPass!;TrustServerCertificate=True"
+      JwtSettings__SecretKey: "ShopEZSuperSecretKey2025ForJWTTokenGeneration!!"
+      JwtSettings__Issuer: "ShopEZ"
+      JwtSettings__Audience: "ShopEZ"
+      JwtSettings__ExpiryInMinutes: "10080"
+      AllowedOrigins: "http://localhost:4200"
+      ASPNETCORE_ENVIRONMENT: "Development"
+    ports:
+      - "7004:80"
+    networks:
+      - shopez-network
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: ShopEZ_apigateway/Dockerfile
+    container_name: shopez-gateway
+    restart: unless-stopped
+    depends_on:
+      - auth-service
+      - product-service
+      - cart-service
+      - order-service
+    environment:
+      JwtSettings__SecretKey: "ShopEZSuperSecretKey2025ForJWTTokenGeneration!!"
+      JwtSettings__Issuer: "ShopEZ"
+      JwtSettings__Audience: "ShopEZ"
+      AllowedOrigins: "http://localhost:4200"
+      ASPNETCORE_ENVIRONMENT: "Development"
+      ReverseProxy__Clusters__auth-cluster__Destinations__auth-service__Address: "http://auth-service:80"
+      ReverseProxy__Clusters__product-cluster__Destinations__product-service__Address: "http://product-service:80"
+      ReverseProxy__Clusters__cart-cluster__Destinations__cart-service__Address: "http://cart-service:80"
+      ReverseProxy__Clusters__order-cluster__Destinations__order-service__Address: "http://order-service:80"
+    ports:
+      - "7000:80"
+    networks:
+      - shopez-network
+
+  angular-ui:
+    build:
+      context: C:\Users\yjaya\AngularApps\ShopEZ-frontend
+      dockerfile: Dockerfile
+    container_name: shopez-angular
+    restart: unless-stopped
+    depends_on:
+      - api-gateway
+    ports:
+      - "4200:80"
+    networks:
+      - shopez-network
+
+volumes:
+  sqlserver_data:
+  product_images:
+
+networks:
+  shopez-network:
+    driver: bridge

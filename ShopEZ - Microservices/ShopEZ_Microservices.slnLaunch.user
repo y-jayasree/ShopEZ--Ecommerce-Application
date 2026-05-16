@@ -1,0 +1,27 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "ShopEZ_OrderService\\ShopEZ_OrderService.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "ShopEZ_apigateway\\ShopEZ_apigateway.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "ShopEZ_cartservice\\ShopEZ_cartservice.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "ShopEZ_ProductService\\ShopEZ_ProductService.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "ShopEZ_AuthService\\ShopEZ_AuthService.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

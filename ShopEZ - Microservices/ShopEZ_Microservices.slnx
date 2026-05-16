@@ -1,0 +1,16 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".dockerignore" />
+    <File Path="docker-compose.yml" />
+  </Folder>
+  <Project Path="ShopEZ_apigateway/ShopEZ_apigateway.csproj" Id="93673f85-f669-4abb-8057-c61f51f4d225" />
+  <Project Path="ShopEZ_AuthService.Tests/ShopEZ_AuthService.Tests.csproj" Id="1e97ffc3-fc4a-4869-9d6c-a1c857cf1ff2" />
+  <Project Path="ShopEZ_AuthService/ShopEZ_AuthService.csproj" />
+  <Project Path="ShopEZ_CartService.Tests/ShopEZ_CartService.Tests.csproj" Id="25331b07-0c80-439a-a6ea-df413c84a4f9" />
+  <Project Path="ShopEZ_cartservice/ShopEZ_cartservice.csproj" Id="7b82cf0e-ebbf-407a-a6ad-f43fa01644b1" />
+  <Project Path="ShopEZ_OrderService.Tests/ShopEZ_OrderService.Tests.csproj" Id="7a6ee079-1ccd-4dd8-b09f-c87a78d6d472" />
+  <Project Path="ShopEZ_OrderService/ShopEZ_OrderService.csproj" />
+  <Project Path="ShopEZ_ProductService.Tests/ShopEZ_ProductService.Tests.csproj" Id="1bd2c274-622c-4465-8837-21f0e75ed281" />
+  <Project Path="ShopEZ_ProductService/ShopEZ_ProductService.csproj" />
+  <Project Path="ShopEZ_Shared_Lib/ShopEZ_Shared_Lib.csproj" />
+</Solution>
