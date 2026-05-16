@@ -1,0 +1,6 @@
+@ShopEZ_cartservice_HostAddress = http://localhost:5270
+
+GET {{ShopEZ_cartservice_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
